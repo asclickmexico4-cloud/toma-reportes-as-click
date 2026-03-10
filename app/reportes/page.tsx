@@ -27,6 +27,8 @@ type MembresiaData = {
 };
 
 type ReporteData = {
+  idServicio?: string;
+  linkServicio?: string;
   nombreCliente: string;
   telefono: string;
   placas: string;
@@ -169,7 +171,7 @@ export default function ReportesPage() {
       return `Membresía vencida hace ${Math.abs(diasRestantesMembresia)} día(s).;`
     }
     if (diasRestantesMembresia === 0) return "La membresía vence hoy.";
-    return `Faltan ${diasRestantesMembresia} día(s) para vencer;`
+    return `Faltan ${diasRestantesMembresia} día(s) para vencer.;`
   }, [membresia, membresiaActivaReal, diasRestantesMembresia]);
 
   const verificarMembresia = async (placas: string) => {
@@ -272,6 +274,7 @@ export default function ReportesPage() {
         subMarca: form.subMarca.trim(),
         color: form.color.trim(),
         serie: form.serie.trim().toUpperCase(),
+        vehiculo: `${form.marca.trim()} ${form.subMarca.trim()}.trim()`,
         tipoServicio: form.tipoServicio,
         ubicacion: form.ubicacion.trim(),
         linkUbicacion: form.linkUbicacion.trim(),
@@ -287,9 +290,13 @@ export default function ReportesPage() {
         estado: "pendiente",
       };
 
-      await addDoc(collection(db, "reportes_asclick"), reporteData);
+      const docRef = await addDoc(collection(db, "reportes_asclick"), reporteData);
+
+      const linkServicio = `${window.location.origin}/servicio/${docRef.id};`
 
       setUltimoReporte({
+        idServicio: docRef.id,
+        linkServicio,
         nombreCliente: reporteData.nombreCliente,
         telefono: reporteData.telefono,
         placas: reporteData.placas,
@@ -308,7 +315,7 @@ export default function ReportesPage() {
         color: reporteData.color,
       });
 
-      alert("Reporte guardado correctamente");
+      alert(`Reporte guardado correctamente.\n\nLink del servicio:\n${linkServicio}`);
 
       setForm({
         nombreCliente: "",
@@ -336,6 +343,8 @@ export default function ReportesPage() {
   const abrirWhatsApp = (numero: string, destino: string) => {
     const data =
       ultimoReporte || {
+        idServicio: "",
+        linkServicio: "",
         nombreCliente: form.nombreCliente,
         telefono: form.telefono,
         placas: normalizarPlacas(form.placas),
@@ -385,9 +394,12 @@ ${data.descripcion || "Sin descripción"}
 
 Membresía activa: ${data.membresiaActiva ? "Sí" : "No"}
 Plan: ${data.plan || "N/A"}
-Vigencia: ${data.vigencia || "N/A"}`;
+Vigencia: ${data.vigencia || "N/A"}
 
-    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`;
+ABRIR SERVICIO:
+${data.linkServicio || "No generado"}`;
+
+    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)};`
     window.open(url, "_blank");
   };
 
@@ -419,7 +431,7 @@ Vigencia: ${data.vigencia || "N/A"}`;
     }
 
     if (form.ubicacion?.trim()) {
-      const url = `https://waze.com/ul?q=${encodeURIComponent(form.ubicacion)}`;
+      const url = `https://waze.com/ul?q=${encodeURIComponent(form.ubicacion)};`
       window.open(url, "_blank");
       return;
     }
