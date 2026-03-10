@@ -292,28 +292,30 @@ export default function ReportesPage() {
 
       const docRef = await addDoc(collection(db, "reportes_asclick"), reporteData);
 
-      const linkServicio = `${window.location.origin}/servicio/${docRef.id}`
+const linkServicio = `${window.location.origin}/servicio/${docRef.id}`;
 
-      setUltimoReporte({
-        idServicio: docRef.id,
-        linkServicio,
-        nombreCliente: reporteData.nombreCliente,
-        telefono: reporteData.telefono,
-        placas: reporteData.placas,
-        tipoServicio: reporteData.tipoServicio,
-        ubicacion: reporteData.ubicacion,
-        linkUbicacion: reporteData.linkUbicacion,
-        descripcion: reporteData.descripcion,
-        membresiaActiva: reporteData.membresiaActiva,
-        plan: reporteData.plan,
-        vigencia: reporteData.vigencia,
-        tipoCliente: reporteData.tipoCliente,
-        costoServicio: reporteData.costoServicio,
-        marca: reporteData.marca,
-        subMarca: reporteData.subMarca,
-        serie: reporteData.serie,
-        color: reporteData.color,
-      });
+alert(linkServicio);
+
+setUltimoReporte({
+  idServicio: docRef.id,
+  linkServicio: linkServicio,
+  nombreCliente: reporteData.nombreCliente,
+  telefono: reporteData.telefono,
+  placas: reporteData.placas,
+  tipoServicio: reporteData.tipoServicio,
+  ubicacion: reporteData.ubicacion,
+  linkUbicacion: reporteData.linkUbicacion,
+  descripcion: reporteData.descripcion,
+  membresiaActiva: reporteData.membresiaActiva,
+  plan: reporteData.plan,
+  vigencia: reporteData.vigencia,
+  tipoCliente: reporteData.tipoCliente,
+  costoServicio: reporteData.costoServicio,
+  marca: reporteData.marca,
+  subMarca: reporteData.subMarca,
+  serie: reporteData.serie,
+  color: reporteData.color,
+});
 
       alert(`Reporte guardado correctamente.\n\nLink del servicio:\n${linkServicio}`);
 
@@ -676,6 +678,7 @@ ${data.linkServicio || "No generado"}
     </main>
   );
 }
+
 
 
 
