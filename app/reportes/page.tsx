@@ -363,10 +363,18 @@ export default function ReportesPage() {
         costoServicio,
       };
 
-    const mensaje = `🚨 SERVICIO AS CLICK
+   const abrirWhatsApp = (numero: string, destino: string) => {
+  if (!ultimoReporte) {
+    alert("Primero guarda el reporte.");
+    return;
+  }
+
+  const data = ultimoReporte;
+
+  const mensaje = `🚨 SERVICIO AS CLICK
 
 Área asignada: ${destino}
-Cliente: ${data.nombreCliente}
+Cliente: ${data.nombreCliente || "N/A"}
 
 DATOS DEL AUTO
 Marca: ${data.marca || "N/A"}
@@ -375,13 +383,13 @@ Placas: ${data.placas || "N/A"}
 Color: ${data.color || "N/A"}
 Serie: ${data.serie || "N/A"}
 
-Servicio solicitado: ${data.tipoServicio}
-Tipo de cliente: ${data.tipoCliente}
+Servicio solicitado: ${data.tipoServicio || "N/A"}
+Tipo de cliente: ${data.tipoCliente || "N/A"}
 Costo aplicable: ${
-      data.costoServicio !== null
-        ? "$" + data.costoServicio.toLocaleString("es-MX")
-        : "Tarifa no definida"
-    }
+  data.costoServicio !== null
+    ? "$" + data.costoServicio.toLocaleString("es-MX")
+    : "Tarifa no definida"
+}
 
 Ubicación reportada:
 ${data.ubicacion || "Sin dirección"}
@@ -397,11 +405,13 @@ Plan: ${data.plan || "N/A"}
 Vigencia: ${data.vigencia || "N/A"}
 
 ABRIR SERVICIO:
-${data.linkServicio || "No generado"}`
+${data.linkServicio || "No generado"}
+`
 
-    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`
-    window.open(url, "_blank");
-  };
+  const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`;
+
+  window.open(url, "_blank");
+};
 
   const abrirGoogleMaps = () => {
     const link = form.linkUbicacion?.trim();
@@ -666,5 +676,6 @@ ${data.linkServicio || "No generado"}`
     </main>
   );
 }
+
 
 
