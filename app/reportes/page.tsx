@@ -397,9 +397,9 @@ Plan: ${data.plan || "N/A"}
 Vigencia: ${data.vigencia || "N/A"}
 
 ABRIR SERVICIO:
-${data.linkServicio || "No generado"}`;
+${data.linkServicio || "No generado"}`
 
-    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)};`
+    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`
     window.open(url, "_blank");
   };
 
@@ -666,3 +666,4 @@ ${data.linkServicio || "No generado"}`;
     </main>
   );
 }
+
