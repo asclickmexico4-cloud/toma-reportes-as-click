@@ -292,32 +292,32 @@ export default function ReportesPage() {
 
       const docRef = await addDoc(collection(db, "reportes_asclick"), reporteData);
 
-const linkServicio = `${window.location.origin}/servicio/${docRef.id}`;
+      const linkServicio = `${window.location.origin}/servicio/${docRef.id}`;
 
-alert(linkServicio);
+      alert(linkServicio);
 
-setUltimoReporte({
-  idServicio: docRef.id,
-  linkServicio: linkServicio,
-  nombreCliente: reporteData.nombreCliente,
-  telefono: reporteData.telefono,
-  placas: reporteData.placas,
-  tipoServicio: reporteData.tipoServicio,
-  ubicacion: reporteData.ubicacion,
-  linkUbicacion: reporteData.linkUbicacion,
-  descripcion: reporteData.descripcion,
-  membresiaActiva: reporteData.membresiaActiva,
-  plan: reporteData.plan,
-  vigencia: reporteData.vigencia,
-  tipoCliente: reporteData.tipoCliente,
-  costoServicio: reporteData.costoServicio,
-  marca: reporteData.marca,
-  subMarca: reporteData.subMarca,
-  serie: reporteData.serie,
-  color: reporteData.color,
-});
+      setUltimoReporte({
+        idServicio: docRef.id,
+        linkServicio: linkServicio,
+        nombreCliente: reporteData.nombreCliente,
+        telefono: reporteData.telefono,
+        placas: reporteData.placas,
+        tipoServicio: reporteData.tipoServicio,
+        ubicacion: reporteData.ubicacion,
+        linkUbicacion: reporteData.linkUbicacion,
+        descripcion: reporteData.descripcion,
+        membresiaActiva: reporteData.membresiaActiva,
+        plan: reporteData.plan,
+        vigencia: reporteData.vigencia,
+        tipoCliente: reporteData.tipoCliente,
+        costoServicio: reporteData.costoServicio,
+        marca: reporteData.marca,
+        subMarca: reporteData.subMarca,
+        serie: reporteData.serie,
+        color: reporteData.color,
+      });
 
-      alert(`Reporte guardado correctamente.\n\nLink del servicio:\n${linkServicio}`);
+      alert("Reporte guardado correctamente");
 
       setForm({
         nombreCliente: "",
@@ -343,37 +343,29 @@ setUltimoReporte({
   };
 
   const abrirWhatsApp = (numero: string, destino: string) => {
-    const data =
-      ultimoReporte || {
-        idServicio: "",
-        linkServicio: "",
-        nombreCliente: form.nombreCliente,
-        telefono: form.telefono,
-        placas: normalizarPlacas(form.placas),
-        marca: form.marca,
-        subMarca: form.subMarca,
-        color: form.color,
-        serie: form.serie,
-        tipoServicio: form.tipoServicio,
-        ubicacion: form.ubicacion,
-        linkUbicacion: form.linkUbicacion,
-        descripcion: form.descripcion,
-        membresiaActiva: membresiaActivaReal,
-        plan: membresia?.plan || "",
-        vigencia: membresia?.vigencia || "",
-        tipoCliente: membresia?.tipoCliente || "particular",
-        costoServicio,
-      };
+    const data = ultimoReporte || {
+      idServicio: "",
+      linkServicio: "",
+      nombreCliente: form.nombreCliente,
+      telefono: form.telefono,
+      placas: normalizarPlacas(form.placas),
+      marca: form.marca,
+      subMarca: form.subMarca,
+      color: form.color,
+      serie: form.serie,
+      tipoServicio: form.tipoServicio,
+      ubicacion: form.ubicacion,
+      linkUbicacion: form.linkUbicacion,
+      descripcion: form.descripcion,
+      membresiaActiva: membresiaActivaReal,
+      plan: membresia?.plan || "",
+      vigencia: membresia?.vigencia || "",
+      tipoCliente: membresia?.tipoCliente || "particular",
+      costoServicio,
+    };
 
-   const abrirWhatsApp = (numero: string, destino: string) => {
-  if (!ultimoReporte) {
-    alert("Primero guarda el reporte.");
-    return;
-  }
-
-  const data = ultimoReporte;
-
-  const mensaje = `🚨 SERVICIO AS CLICK
+    const mensaje = `
+🚨 SERVICIO AS CLICK
 
 Área asignada: ${destino}
 Cliente: ${data.nombreCliente || "N/A"}
@@ -388,10 +380,10 @@ Serie: ${data.serie || "N/A"}
 Servicio solicitado: ${data.tipoServicio || "N/A"}
 Tipo de cliente: ${data.tipoCliente || "N/A"}
 Costo aplicable: ${
-  data.costoServicio !== null
-    ? "$" + data.costoServicio.toLocaleString("es-MX")
-    : "Tarifa no definida"
-}
+      data.costoServicio !== null && data.costoServicio !== undefined
+        ? "$" + data.costoServicio.toLocaleString("es-MX")
+        : "Tarifa no definida"
+    }
 
 Ubicación reportada:
 ${data.ubicacion || "Sin dirección"}
@@ -408,12 +400,14 @@ Vigencia: ${data.vigencia || "N/A"}
 
 ABRIR SERVICIO:
 ${data.linkServicio || "No generado"}
-`
+`;
 
-  const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`;
+    alert("VERSION NUEVA");
+    alert(mensaje);
 
-  window.open(url, "_blank");
-};
+    const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
+  };
 
   const abrirGoogleMaps = () => {
     const link = form.linkUbicacion?.trim();
@@ -443,7 +437,7 @@ ${data.linkServicio || "No generado"}
     }
 
     if (form.ubicacion?.trim()) {
-      const url = `https://waze.com/ul?q=${encodeURIComponent(form.ubicacion)};`
+      const url = `https://waze.com/ul?q=${encodeURIComponent(form.ubicacion)}`;
       window.open(url, "_blank");
       return;
     }
@@ -678,6 +672,7 @@ ${data.linkServicio || "No generado"}
     </main>
   );
 }
+
 
 
 
