@@ -27,6 +27,8 @@ type MembresiaData = {
 };
 
 type ReporteData = {
+  idServicio?: string;
+  linkServicio?: string;
   nombreCliente: string;
   telefono: string;
   placas: string;
@@ -169,7 +171,7 @@ export default function ReportesPage() {
       return `Membresía vencida hace ${Math.abs(diasRestantesMembresia)} día(s).;`
     }
     if (diasRestantesMembresia === 0) return "La membresía vence hoy.";
-    return `Faltan ${diasRestantesMembresia} día(s) para vencer;`
+    return `Faltan ${diasRestantesMembresia} día(s) para vencer.;`
   }, [membresia, membresiaActivaReal, diasRestantesMembresia]);
 
   const verificarMembresia = async (placas: string) => {
@@ -272,6 +274,7 @@ export default function ReportesPage() {
         subMarca: form.subMarca.trim(),
         color: form.color.trim(),
         serie: form.serie.trim().toUpperCase(),
+        vehiculo: `${form.marca.trim()} ${form.subMarca.trim()}.trim()`,
         tipoServicio: form.tipoServicio,
         ubicacion: form.ubicacion.trim(),
         linkUbicacion: form.linkUbicacion.trim(),
@@ -287,9 +290,15 @@ export default function ReportesPage() {
         estado: "pendiente",
       };
 
-      await addDoc(collection(db, "reportes_asclick"), reporteData);
+      const docRef = await addDoc(collection(db, "reportes_asclick"), reporteData);
+
+      const linkServicio = `${window.location.origin}/servicio/${docRef.id}`;
+
+      alert(linkServicio);
 
       setUltimoReporte({
+        idServicio: docRef.id,
+        linkServicio: linkServicio,
         nombreCliente: reporteData.nombreCliente,
         telefono: reporteData.telefono,
         placas: reporteData.placas,
@@ -334,30 +343,32 @@ export default function ReportesPage() {
   };
 
   const abrirWhatsApp = (numero: string, destino: string) => {
-    const data =
-      ultimoReporte || {
-        nombreCliente: form.nombreCliente,
-        telefono: form.telefono,
-        placas: normalizarPlacas(form.placas),
-        marca: form.marca,
-        subMarca: form.subMarca,
-        color: form.color,
-        serie: form.serie,
-        tipoServicio: form.tipoServicio,
-        ubicacion: form.ubicacion,
-        linkUbicacion: form.linkUbicacion,
-        descripcion: form.descripcion,
-        membresiaActiva: membresiaActivaReal,
-        plan: membresia?.plan || "",
-        vigencia: membresia?.vigencia || "",
-        tipoCliente: membresia?.tipoCliente || "particular",
-        costoServicio,
-      };
+    const data = ultimoReporte || {
+      idServicio: "",
+      linkServicio: "",
+      nombreCliente: form.nombreCliente,
+      telefono: form.telefono,
+      placas: normalizarPlacas(form.placas),
+      marca: form.marca,
+      subMarca: form.subMarca,
+      color: form.color,
+      serie: form.serie,
+      tipoServicio: form.tipoServicio,
+      ubicacion: form.ubicacion,
+      linkUbicacion: form.linkUbicacion,
+      descripcion: form.descripcion,
+      membresiaActiva: membresiaActivaReal,
+      plan: membresia?.plan || "",
+      vigencia: membresia?.vigencia || "",
+      tipoCliente: membresia?.tipoCliente || "particular",
+      costoServicio,
+    };
 
-    const mensaje = `🚨 SERVICIO AS CLICK
+    const mensaje = `
+🚨 SERVICIO AS CLICK
 
 Área asignada: ${destino}
-Cliente: ${data.nombreCliente}
+Cliente: ${data.nombreCliente || "N/A"}
 
 DATOS DEL AUTO
 Marca: ${data.marca || "N/A"}
@@ -366,10 +377,10 @@ Placas: ${data.placas || "N/A"}
 Color: ${data.color || "N/A"}
 Serie: ${data.serie || "N/A"}
 
-Servicio solicitado: ${data.tipoServicio}
-Tipo de cliente: ${data.tipoCliente}
+Servicio solicitado: ${data.tipoServicio || "N/A"}
+Tipo de cliente: ${data.tipoCliente || "N/A"}
 Costo aplicable: ${
-      data.costoServicio !== null
+      data.costoServicio !== null && data.costoServicio !== undefined
         ? "$" + data.costoServicio.toLocaleString("es-MX")
         : "Tarifa no definida"
     }
@@ -385,7 +396,14 @@ ${data.descripcion || "Sin descripción"}
 
 Membresía activa: ${data.membresiaActiva ? "Sí" : "No"}
 Plan: ${data.plan || "N/A"}
-Vigencia: ${data.vigencia || "N/A"}`;
+Vigencia: ${data.vigencia || "N/A"}
+
+ABRIR SERVICIO:
+${data.linkServicio || "No generado"}
+`;
+
+    alert("VERSION NUEVA");
+    alert(mensaje);
 
     const url = `https://wa.me/52${numero}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
