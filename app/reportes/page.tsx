@@ -292,7 +292,7 @@ export default function ReportesPage() {
 
       const docRef = await addDoc(collection(db, "reportes_asclick"), reporteData);
 
-      const linkServicio = `${window.location.origin}/servicio/${docRef.id};`
+      const linkServicio = `${window.location.origin}/servicio/${docRef.id}`
 
       setUltimoReporte({
         idServicio: docRef.id,
@@ -666,4 +666,5 @@ ${data.linkServicio || "No generado"}`
     </main>
   );
 }
+
 
